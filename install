@@ -1,16 +1,30 @@
-//Open OPC for XP libs
+install python 3.4.4 for winXP
+
+//OpenOPC libs for python 3.4
 pip install OpenOPC-Python3x
 pip install pypiwin32==219
 
-//key listener libs
+//key listener libs for python 3.4
 pip install pynput==1.3
 
-//create exe libs
+//create exe libs for python 3.4
 pip install pefile==2016.3.28
 pip install pyinstaller==3.2
+
+//Work with tray for python 3.4
+pip install pillow==2.7.0
+pip install pystray
+change line 131 in file site-packages/pystray/_win32.py -> threading.Thread(target=lambda: self._run(), daemon=True).start()
+
+//Rx python libs for python 3.4
+pip install Rx==1.5.7
+
+//Work with date libs for python 3.4
+pip install python-dateutil
 
 //create .exe command:
 pyinstaller --hiddenimport win32timezone --onefile main.py
 
 //For working OpenOPC.client()
 install on PC matrikonopcexplorer.exe (with server simulator option)
+

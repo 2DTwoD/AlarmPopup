@@ -12,10 +12,9 @@ pywintypes.datetime = pywintypes.TimeType
 
 class OPCListener:
 
-    def __init__(self, parameters: Parameters, incomming_subject: Subject, update_time=1):
+    def __init__(self, parameters: Parameters, incomming_tags_subject: Subject, update_time=1):
         self.parameters = parameters
-        self.incomming_subject = incomming_subject
-        self.tags = []
+        self.incomming_tags_subject = incomming_tags_subject
         self.update_time = update_time
 
     def start_opc(self):
@@ -29,9 +28,10 @@ class OPCListener:
             while True:
                 time.sleep(self.update_time)
                 try:
-                    self.tags = opc.read(group=self.parameters.group)
-                    for tag in self.tags:
-                        self.incomming_subject.on_next(tag)
+                    tags = opc.read(group=self.parameters.group)
+                    for i in range(len(tags)):
+                        tags[i] = tags[i] + (self.parameters.messages[tags[i][0]], )
+                    self.incomming_tags_subject.on_next(tags)
                 except OpenOPC.TimeoutError as e:
                     print("Reading exception occurred: ", e)
                     opc.remove(self.parameters.group)

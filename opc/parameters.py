@@ -1,20 +1,25 @@
 class Parameters:
     def __init__(self, path: str):
         self.messages = {}
-        with open(path, 'r') as f:
+
+        with open(path, 'r', encoding="utf-8") as f:
             content = f.read()
+
         strokes = content.split("\n")
         num_of_strokes = len(strokes)
+
         if num_of_strokes < 4:
             raise Exception("wrong config: num of strokes or empty file " + path)
+
         self.OPCname = self._getPar(strokes[0], "OPCname")
         self.group = self._getPar(strokes[1], "group")
         self.prefix = self._getPar(strokes[2], "prefix")
+
         for i in range(3, num_of_strokes):
             pair = self._getPair(self.prefix + strokes[i])
             self.messages[pair[0]] = pair[1]
-        self.tags = list(self.messages.keys())
 
+        self.tags = list(self.messages.keys())
 
     def _getPar(self, stroke: str, name: str):
         pair = stroke.split("@")

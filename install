@@ -5,16 +5,16 @@ pip install OpenOPC-Python3x
 pip install pypiwin32==219
 
 //key listener libs for python 3.4
-pip install pynput==1.3
+pip install keyboard==0.13.5
+change line 94 in file site-packages/keyboard/_winkeyboard.py.py -> SetWindowsHookEx = user32.SetWindowsHookExA
 
 //create exe libs for python 3.4
 pip install pefile==2016.3.28
 pip install pyinstaller==3.2
 
-//Work with tray for python 3.4
+//Work with tray for python 3.4 (Not working on WinXP!!!!)
 pip install pillow==2.7.0
-pip install pystray
-change line 131 in file site-packages/pystray/_win32.py -> threading.Thread(target=lambda: self._run(), daemon=True).start()
+pip install pystray=0.11
 
 //Rx python libs for python 3.4
 pip install Rx==1.5.7
@@ -23,7 +23,7 @@ pip install Rx==1.5.7
 pip install python-dateutil
 
 //create .exe command:
-pyinstaller --hiddenimport win32timezone --onefile main.py
+pyinstaller --hiddenimport win32timezone --onefile --noconsole main.py
 
 //For working OpenOPC.client()
 install on PC matrikonopcexplorer.exe (with server simulator option)

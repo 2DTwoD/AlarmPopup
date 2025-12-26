@@ -24,6 +24,7 @@ class OPCListener:
         try:
             opc = OpenOPC.client()
             opc.connect(self.parameters.OPCname)
+            self.incomming_tags_subject.on_next('clear')
             opc.read(self.parameters.tags, group=self.parameters.group, update=self.update_time)
             while True:
                 time.sleep(self.update_time)
@@ -36,7 +37,9 @@ class OPCListener:
                     print("Reading exception occurred: ", e)
                     opc.remove(self.parameters.group)
                     opc.close()
+                    break
         except OpenOPC.OPCError as e:
             print("Connection exception occurred: ", e)
-            time.sleep(5)
-            self.start_opc()
+        self.incomming_tags_subject.on_next('OPC error')
+        time.sleep(5)
+        self.start_opc()

@@ -17,6 +17,8 @@ class Parameters:
 
         for i in range(3, num_of_strokes):
             pair = self._getPair(self.prefix + strokes[i])
+            if pair[0] == 'end' and pair[1] == pair[0]:
+                break
             self.messages[pair[0]] = pair[1]
 
         self.tags = list(self.messages.keys())

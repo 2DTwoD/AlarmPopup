@@ -16,7 +16,6 @@ if __name__ == "__main__":
     tv_win_height = 200
     tv_title = "Tag viewer v" + version
 
-    opc_update_time = 5
     hotkey = 'F4'
     tag_viewer_password = 'adMin'
 
@@ -32,8 +31,7 @@ if __name__ == "__main__":
     parameters.print_cfg()
 
     opcListener = OPCListener(parameters=parameters,
-                              incomming_tags_subject=incomming_tags_subject,
-                              update_time=opc_update_time)
+                              incomming_tags_subject=incomming_tags_subject)
     opcListener.start_opc()
 
     messageTable = MessageTable(master=main_window,

@@ -12,10 +12,9 @@ pywintypes.datetime = pywintypes.TimeType
 
 class OPCListener:
 
-    def __init__(self, parameters: Parameters, incomming_tags_subject: Subject, update_time=1):
+    def __init__(self, parameters: Parameters, incomming_tags_subject: Subject):
         self.parameters = parameters
         self.incomming_tags_subject = incomming_tags_subject
-        self.update_time = update_time
 
     def start_opc(self):
         threading.Thread(target=lambda: self._run(), daemon=True).start()
@@ -25,9 +24,9 @@ class OPCListener:
             opc = OpenOPC.client()
             opc.connect(self.parameters.OPCname)
             self.incomming_tags_subject.on_next('clear')
-            opc.read(self.parameters.tags, group=self.parameters.group, update=self.update_time)
+            opc.read(self.parameters.tags, group=self.parameters.group, update=self.parameters.update_time)
             while True:
-                time.sleep(self.update_time)
+                time.sleep(self.parameters.update_time)
                 try:
                     tags = opc.read(group=self.parameters.group)
                     for i in range(len(tags)):
@@ -41,5 +40,5 @@ class OPCListener:
         except OpenOPC.OPCError as e:
             print("Connection exception occurred: ", e)
         self.incomming_tags_subject.on_next('OPC error')
-        time.sleep(5)
+        time.sleep(self.parameters.update_time)
         self.start_opc()

@@ -8,14 +8,17 @@ class Parameters:
         strokes = content.split("\n")
         num_of_strokes = len(strokes)
 
-        if num_of_strokes < 4:
+        if num_of_strokes < 5:
             raise Exception("wrong config: num of strokes or empty file " + path)
 
         self.OPCname = self._getPar(strokes[0], "OPCname")
         self.group = self._getPar(strokes[1], "group")
         self.prefix = self._getPar(strokes[2], "prefix")
+        self.update_time = int(self._getPar(strokes[3], "updateTime"))
+        if self.update_time < 1:
+            self.update_time = 1
 
-        for i in range(3, num_of_strokes):
+        for i in range(4, num_of_strokes):
             pair = self._getPair(self.prefix + strokes[i])
             if pair[0] == 'end' and pair[1] == pair[0]:
                 break

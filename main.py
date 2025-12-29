@@ -28,7 +28,7 @@ if __name__ == "__main__":
                              show_hide_window_subject=show_hide_window_subject)
 
     parameters = Parameters(path='opc_tags.cfg')
-    parameters.print_cfg()
+    # parameters.print_cfg()
 
     opcListener = OPCListener(parameters=parameters,
                               incomming_tags_subject=incomming_tags_subject)

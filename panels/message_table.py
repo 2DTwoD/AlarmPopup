@@ -12,7 +12,6 @@ class MessageTable(ttk.Treeview):
         self.incomming_tags_subject.subscribe(lambda tags: self._newTags(tags))
         self.strokes = []
         self.show_hide_window_subject = show_hide_window_subject
-        self.time_format = '%d.%m.%Y, %H:%M:%S'
 
         style = ttk.Style()
         style.configure("Treeview.Heading", font=('Arial', 10, 'bold'))
@@ -31,17 +30,23 @@ class MessageTable(ttk.Treeview):
         self.pack(fill=BOTH, side=LEFT, expand=True)
         scroll.pack(fill=Y, side=RIGHT)
 
+    def _insert_in_table(self, dt, line):
+        self.insert("",
+                    END,
+                    values=(dt.strftime('%d.%m.%Y, %H:%M:%S'), line),
+                    tags=['stroke_style'])
+
+    def _clear_table(self):
+        self.delete(*self.get_children())
+
     def _newTags(self, tags):
         if tags == 'OPC error':
-            self.delete(*self.get_children())
-            self.insert("",
-                        END,
-                        values=(datetime.now().strftime(self.time_format), 'Нет связи с OPC сервером'),
-                        tags=['stroke_style'])
+            self._clear_table()
+            self._insert_in_table(datetime.now(), 'Нет связи с OPC сервером')
             return
         elif tags == 'clear':
-            self.delete(*self.get_children())
-            self.strokes = []
+            self._clear_table()
+            self.strokes.clear()
             return
 
         show = False
@@ -56,12 +61,9 @@ class MessageTable(ttk.Treeview):
             self.show_hide_window_subject.on_next(True)
 
         if strokes_change_aux:
-            self.delete(*self.get_children())
+            self._clear_table()
             for stroke in self.strokes:
-                self.insert("",
-                            END,
-                            values=(parser.parse(stroke[3]).strftime(self.time_format), stroke[4]),
-                            tags=['stroke_style'])
+                self._insert_in_table(parser.parse(stroke[3]), stroke[4])
             if len(self.strokes) == 0:
                 self.show_hide_window_subject.on_next(False)
 
@@ -69,7 +71,7 @@ class MessageTable(ttk.Treeview):
         # print(self.strokes)
         # print('-' * 50)
 
-    def _checkAndAddTag(self, tag):
+    def _checkAndAddTag(self, tag) -> (bool, bool):
         new_added = False
         strokes_change = False
         match = False
@@ -93,7 +95,7 @@ class MessageTable(ttk.Treeview):
 
         if value and not match:
             self.strokes.append(tag)
-            strokes_change = True
             new_added = True
+            strokes_change = True
 
         return new_added, strokes_change
